@@ -11,7 +11,7 @@ export function Tag({ children, className, ...props }: TagProps) {
     <Button
       variant="secondary"
       size="sm"
-      className={cn("h-6 rounded-full px-3 text-xs font-medium", className)}
+      className={cn("h-6 rounded-full px-3 text-xs font-medium transition-colors", className)}
       {...props}
     >
       {children}

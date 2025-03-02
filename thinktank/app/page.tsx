@@ -7,9 +7,11 @@ import { HiringBoard } from "@/components/hiring-board"
 import { RentLab } from "@/components/rent-lab"
 import { StaffPicks } from "@/components/staff-picks"
 import { Topics } from "@/components/topics"
+import { usePosts } from "./providers"
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
+  const { posts, setPosts } = usePosts()
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-6">
@@ -21,7 +23,7 @@ export default function Home() {
             <TabsTrigger value="rent-lab">Rent Lab</TabsTrigger>
           </TabsList>
           <TabsContent value="for-you">
-            <WebBoard searchQuery={searchQuery} />
+            <WebBoard searchQuery={searchQuery} posts={posts} setPosts={setPosts} />
           </TabsContent>
           <TabsContent value="hiring">
             <HiringBoard searchQuery={searchQuery} />
@@ -33,7 +35,7 @@ export default function Home() {
       </div>
       <div className="space-y-6">
         <StaffPicks />
-        <Topics />
+        <Topics selectedTopic={undefined} onTopicSelect={() => {}} />
       </div>
     </div>
   )

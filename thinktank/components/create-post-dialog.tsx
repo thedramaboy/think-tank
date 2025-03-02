@@ -12,27 +12,46 @@ import { useToast } from "@/components/ui/use-toast"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { usePosts } from "@/app/providers"
 
 export function CreatePostDialog() {
+  const { addWebPost, addHiringPost } = usePosts()
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [postType, setPostType] = useState("web-board")
   const [budget, setBudget] = useState("")
-  const [projectType, setProjectType] = useState("freelance")
+  const [projectType, setProjectType] = useState<"freelance" | "university">("freelance")
   const { toast } = useToast()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Mock post creation
-    const postData = {
-      title,
-      content,
-      type: postType,
-      ...(postType === "hiring" && {
-        budget,
+
+    if (postType === "web-board") {
+      addWebPost({
+        title,
+        content,
+        author: {
+          name: "Current User",
+          avatar: "/placeholder.svg",
+          initials: "CU",
+        },
+        tags: ["Technology"],
+      })
+    } else {
+      addHiringPost({
+        title,
+        content,
+        author: {
+          name: "Current User",
+          avatar: "/placeholder.svg",
+          initials: "CU",
+        },
         projectType,
-      }),
+        budget: projectType === "freelance" ? budget : undefined,
+        timeLeft: "7 days",
+        tags: ["Technology"],
+      })
     }
 
     toast({
@@ -93,7 +112,10 @@ export function CreatePostDialog() {
             <>
               <div className="space-y-2">
                 <Label>Project Type</Label>
-                <Select value={projectType} onValueChange={setProjectType}>
+                <Select
+                  value={projectType}
+                  onValueChange={(value: "freelance" | "university") => setProjectType(value)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Select project type" />
                   </SelectTrigger>
