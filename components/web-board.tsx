@@ -10,24 +10,68 @@ import { Heart, MessageSquare, MoreHorizontal } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { Tag } from "@/components/ui/tag"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import Image from "next/image"
-import type { WebPost } from "@/types/post"
-import { usePosts } from "@/app/providers"
+
+interface Post {
+  id: number
+  title: string
+  content: string
+  author: {
+    name: string
+    avatar: string
+    initials: string
+  }
+  likes: number
+  comments: number
+  date: string
+  tags: string[]
+}
 
 interface WebBoardProps {
   searchQuery?: string
 }
 
 export function WebBoard({ searchQuery = "" }: WebBoardProps) {
-  const { webPosts, setWebPosts } = usePosts()
+  const [posts, setPosts] = useState<Post[]>([
+    {
+      id: 1,
+      title: "Understanding Modern Software Architecture",
+      content:
+        "Exploring the fundamentals of software architecture patterns and their practical applications in today's development landscape...",
+      author: {
+        name: "Sarah Chen",
+        avatar: "/avatar-1.png",
+        initials: "SC",
+      },
+      likes: 42,
+      comments: 12,
+      date: "2h ago",
+      tags: ["Technology", "Software Development", "Architecture"],
+    },
+    {
+      id: 2,
+      title: "The Future of AI in Healthcare",
+      content:
+        "A deep dive into how artificial intelligence is transforming the healthcare industry through innovative solutions...",
+      author: {
+        name: "David Kim",
+        avatar: "/avatar-2.png",
+        initials: "DK",
+      },
+      likes: 89,
+      comments: 24,
+      date: "5h ago",
+      tags: ["Data Science", "Healthcare", "Technology"],
+    },
+  ])
+
   const [commentDialogOpen, setCommentDialogOpen] = useState(false)
-  const [selectedPost, setSelectedPost] = useState<WebPost | null>(null)
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
   const [comment, setComment] = useState("")
   const { toast } = useToast()
 
   const handleLike = (postId: number) => {
-    setWebPosts(
-      webPosts.map((post) => {
+    setPosts(
+      posts.map((post) => {
         if (post.id === postId) {
           return { ...post, likes: post.likes + 1 }
         }
@@ -40,15 +84,15 @@ export function WebBoard({ searchQuery = "" }: WebBoardProps) {
     })
   }
 
-  const handleComment = (post: WebPost) => {
+  const handleComment = (post: Post) => {
     setSelectedPost(post)
     setCommentDialogOpen(true)
   }
 
   const submitComment = () => {
     if (selectedPost) {
-      setWebPosts(
-        webPosts.map((post) => {
+      setPosts(
+        posts.map((post) => {
           if (post.id === selectedPost.id) {
             return { ...post, comments: post.comments + 1 }
           }
@@ -64,7 +108,7 @@ export function WebBoard({ searchQuery = "" }: WebBoardProps) {
     }
   }
 
-  const filteredPosts = webPosts.filter(
+  const filteredPosts = posts.filter(
     (post) =>
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -76,61 +120,49 @@ export function WebBoard({ searchQuery = "" }: WebBoardProps) {
       <div className="space-y-6">
         {filteredPosts.map((post) => (
           <Card key={post.id}>
-            <div className="grid md:grid-cols-[1fr_300px] gap-6">
-              <div>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-4">
-                      <Avatar>
-                        <AvatarImage src={post.author.avatar} />
-                        <AvatarFallback>{post.author.initials}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-medium">{post.author.name}</p>
-                        <p className="text-sm text-muted-foreground">{post.date}</p>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
+            <CardHeader>
+              <div className="flex items-start justify-between">
+                <div className="flex items-center space-x-4">
+                  <Avatar>
+                    <AvatarImage src={post.author.avatar} />
+                    <AvatarFallback>{post.author.initials}</AvatarFallback>
+                  </Avatar>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
-                    <p className="text-muted-foreground">{post.content}</p>
+                    <p className="text-sm font-medium">{post.author.name}</p>
+                    <p className="text-sm text-muted-foreground">{post.date}</p>
                   </div>
-                  <ScrollArea className="w-full whitespace-nowrap">
-                    <div className="flex gap-2">
-                      {post.tags.map((tag) => (
-                        <Tag key={tag}>{tag}</Tag>
-                      ))}
-                    </div>
-                    <ScrollBar orientation="horizontal" />
-                  </ScrollArea>
-                </CardContent>
-                <CardFooter>
-                  <div className="flex items-center space-x-4">
-                    <Button variant="ghost" size="sm" onClick={() => handleLike(post.id)}>
-                      <Heart className="h-4 w-4 mr-2" />
-                      {post.likes}
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => handleComment(post)}>
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                      {post.comments}
-                    </Button>
-                  </div>
-                </CardFooter>
+                </div>
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
               </div>
-              <div className="relative min-h-[200px] md:min-h-full">
-                <Image
-                  src={`/placeholder.svg?height=400&width=300`}
-                  alt={post.title}
-                  fill
-                  className="object-cover rounded-r-lg"
-                />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
+                <p className="text-muted-foreground">{post.content}</p>
               </div>
-            </div>
+              <ScrollArea className="w-full whitespace-nowrap">
+                <div className="flex gap-2">
+                  {post.tags.map((tag) => (
+                    <Tag key={tag}>{tag}</Tag>
+                  ))}
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            </CardContent>
+            <CardFooter>
+              <div className="flex items-center space-x-4">
+                <Button variant="ghost" size="sm" onClick={() => handleLike(post.id)}>
+                  <Heart className="h-4 w-4 mr-2" />
+                  {post.likes}
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => handleComment(post)}>
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  {post.comments}
+                </Button>
+              </div>
+            </CardFooter>
           </Card>
         ))}
       </div>
