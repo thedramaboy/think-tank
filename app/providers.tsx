@@ -25,9 +25,10 @@ export function PostProvider({ children }: { children: React.ReactNode }) {
       content: "Exploring the fundamentals of software architecture patterns...",
       author: {
         name: "Sarah Chen",
-        avatar: "/placeholder.svg",
+        avatar: "/avatar-1.png",
         initials: "SC",
       },
+      image: "/software-arch.jpg",
       likes: 42,
       comments: 12,
       date: "2h ago",

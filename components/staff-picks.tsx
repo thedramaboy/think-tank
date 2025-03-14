@@ -9,12 +9,14 @@ export function StaffPicks() {
       title: "Making Featured stories even more visible",
       author: "Melissa DePuydt",
       time: "2d ago",
+      avatar: "/avatar-2.png",
     },
     {
       id: 2,
       title: "Via Negativa and Negative Capability",
       author: "Sarah Firth",
       time: "5d ago",
+      avatar: "/avatar-3.png",
     },
   ]
 
@@ -31,7 +33,7 @@ export function StaffPicks() {
             </Link>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Avatar className="h-6 w-6">
-                <AvatarImage src="/placeholder.svg" />
+                <AvatarImage src={pick.avatar} alt={pick.author} />
                 <AvatarFallback>
                   {pick.author
                     .split(" ")

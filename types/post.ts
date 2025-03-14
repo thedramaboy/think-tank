@@ -7,6 +7,7 @@ export type BasePost = {
     avatar: string
     initials: string
   }
+  image?: string;
   date: string
   tags: string[]
 }

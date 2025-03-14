@@ -124,7 +124,7 @@ export function WebBoard({ searchQuery = "" }: WebBoardProps) {
               </div>
               <div className="relative min-h-[200px] md:min-h-full">
                 <Image
-                  src={`/placeholder.svg?height=400&width=300`}
+                  src={post.image || "/placeholder.svg"}
                   alt={post.title}
                   fill
                   className="object-cover rounded-r-lg"
