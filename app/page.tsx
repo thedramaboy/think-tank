@@ -18,7 +18,7 @@ export default function Home() {
       <div className="space-y-8">
         <Tabs defaultValue="for-you" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="for-you">For you</TabsTrigger>
+            <TabsTrigger value="for-you">Discussion Board</TabsTrigger>
             <TabsTrigger value="hiring">Hiring Board</TabsTrigger>
             <TabsTrigger value="rent-lab">Rent Lab</TabsTrigger>
           </TabsList>
